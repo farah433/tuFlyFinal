@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "662163574730",
+    "project_id": "tufly-9e833",
+    "storage_bucket": "tufly-9e833.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:662163574730:android:b4274ff670844934f28933",
+        "android_client_info": {
+          "package_name": "com.farah.tufly"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "662163574730-95e0dok15dfs344vl8174ok86ttmgjbt.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBgxsRwV3iOI_UhYyCC8l5nLiznxXkMBIE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "662163574730-95e0dok15dfs344vl8174ok86ttmgjbt.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
