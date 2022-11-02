@@ -26,6 +26,7 @@ class _AddFlightsScreenState extends State<AddFlightsScreen> {
   final flightNumberController = TextEditingController();
   final timeController = TextEditingController();
   final priceController = TextEditingController();
+  final seatController = TextEditingController();
 
   //Starting value of the dropdownMenu
   String selectedcountyFrom = countiesListFrom[0];
@@ -119,6 +120,9 @@ class _AddFlightsScreenState extends State<AddFlightsScreen> {
               PriceTextField('PRICE (ksh)', 'Enter ticket fee', false, priceController,
               (value) => value == null
                 ? 'This field cannot be empty': null,),
+              PriceTextField('SEATS', 'Enter number of seats', false, seatController,
+            (value) => value == null
+              ? 'This field cannot be empty': null,),
               BottomButton('ADD', kPorange, (){addFlight();}),
             ],
           ),
@@ -133,7 +137,8 @@ class _AddFlightsScreenState extends State<AddFlightsScreen> {
         selectedcountyTo != countiesListTo[0] &&
         selectedTime != null &&
         flightNumberController != null  &&
-        priceController != null
+        priceController != null &&
+        seatController != ''
         ){
         final _firestore = await FirebaseFirestore.instance.collection('Flights').add({
         'company' : selectedcompany,
@@ -142,6 +147,7 @@ class _AddFlightsScreenState extends State<AddFlightsScreen> {
         'price' : priceController.text.trim(),
         'time' : selectedTime.toString(),
         'to' : selectedcountyTo,
+        'seats' : seatController.text.trim(),
       });
         Navigator.pop(context);
         Fluttertoast.showToast(msg: 'The Flight has been successifully added.', gravity: ToastGravity.TOP);
