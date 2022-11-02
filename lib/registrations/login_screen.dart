@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
-import 'package:tufly/main.dart';
 import '../const.dart';
 import '../components/other_components.dart';
 import '../components/buttons.dart';
