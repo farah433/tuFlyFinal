@@ -44,7 +44,7 @@ class _AvailabeFlightsState extends State<AvailabeFlights> {
             ),
             
             AvailableFlightsContainer('Fly540', newFromWhere, newToWhere, '9PM', '7000', 'JHY75yOO', (){
-              Navigator.pushNamed(context, SelectSeats.id, arguments: {
+              Navigator.pushNamed(context, ChooseSeat.id, arguments: {
                 'flightCompany': flightCompany[0],
                 'date' : newDate,
                 'passangers': newPassangers,
@@ -52,7 +52,7 @@ class _AvailabeFlightsState extends State<AvailabeFlights> {
                 'toWhere':newToWhere,
               });
             }),
-            AvailableFlightStream(newFromWhere, newToWhere),
+            AvailableFlightStream(newFromWhere, newToWhere, newDate),
           ],
           ),
       ),
@@ -63,9 +63,10 @@ class _AvailabeFlightsState extends State<AvailabeFlights> {
 //For the StreamBuilder to fetch data from Firestore and Display for Available Flights
 class AvailableFlightStream extends StatelessWidget {
 
-  AvailableFlightStream(this.fromWhere, this.toWhere);
+  AvailableFlightStream(this.fromWhere, this.toWhere, this.newDate);
   String fromWhere ;
    String toWhere ;
+   String newDate;
 
   @override
   Widget build(BuildContext context) {
@@ -84,7 +85,17 @@ class AvailableFlightStream extends StatelessWidget {
           final depTime = flight['time'];
           final price = flight['price'];
           final flightNum = flight['flight_no'];
-          final availableFlightsContainer = AvailableFlightsContainer(companyName, fromWhere, toWhere, depTime, price, flightNum, (){Navigator.pushNamed(context, ChooseSeat.id);});
+          final availableFlightsContainer = AvailableFlightsContainer(companyName, fromWhere, toWhere, depTime, price, flightNum, (){
+            //Pushing Arguments to the ChooseSeat screen
+            Navigator.pushNamed(context, ChooseSeat.id, arguments: {
+              'companyName' : companyName,
+              'fromWhere' : fromWhere,
+              'toWhere' : toWhere,
+              'depTime' : depTime,
+              'newDate' : newDate,
+              'price': price,
+              'flightNum' : flightNum,
+            });});
           availableFlightContainers.add(availableFlightsContainer);
         }
         return Expanded(
