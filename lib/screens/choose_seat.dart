@@ -156,10 +156,14 @@ class _ChooseSeatState extends State<ChooseSeat> {
           return Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: GestureDetector(
+                    onDoubleTap: ()async{
+                      setState(() {
+                        dataSeat[index]["isSelected"] = false;
+                      });
+                    },
                     onTap: () async {
                       setState(() {
-                        dataSeat[index]["isSelected"] =! 
-                        dataSeat[index]["isSelected"];
+                        dataSeat[index]["isSelected"] =true;
                       });
                     },
                     child: dataSeat[index]["isBooked"]
@@ -213,10 +217,17 @@ class SeatDeignStream extends StatelessWidget {
   //updating to isSelected onPressed
   void isSeatSelected(id)async {
     bool contollor = false;
-    contollor =! contollor;
+    contollor =true;
     await FirebaseFirestore.instance.collection('Seats').doc(id).update({'isSelected' : contollor});
     Fluttertoast.showToast(msg: 'You selected seat $id!', gravity: ToastGravity.TOP);
   }
+  void isSeatUnSelected(id)async {
+    bool contollor = false;
+    contollor =false;
+    await FirebaseFirestore.instance.collection('Seats').doc(id).update({'isSelected' : contollor});
+    Fluttertoast.showToast(msg: 'You unselected seat $id!', gravity: ToastGravity.TOP);
+  }
+
 
   //Option. 1
 
