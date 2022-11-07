@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import '../const.dart';
 import '../components/buttons.dart';
+import'../components/seats_design.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class ChooseSeat extends StatefulWidget {
   static String id = 'choose_seat';
@@ -11,53 +14,24 @@ class ChooseSeat extends StatefulWidget {
 
 class _ChooseSeatState extends State<ChooseSeat> {
 
-  //Seat Count for left and right
-  var countSeatLeft = 2*18;
-  var countSeatRight = 2*18;
-  var listSeatLeft = [];
-  var listSeatRight = [];
-
-  //Data for the seats
-  initSeatValueToList(List data, count, side){
-    var objectData;
-    for(int i = 0; i < count; i++){
-      objectData = {
-        "id": side+'${i+1}',
-        "isBooked": false,
-        "isAvailable": true,
-        "isSelected": false,
-      };
-      setState(() {
-        data.add(objectData);
-      });
-    }
-    print(data);
-  }
+  
 
   //The Change selected to Booked on press
   setSelectedToBooked(){
-    listSeatLeft.forEach((seat) {
-      if(seat["isSelected"]){
-        setState(() {
-          seat["isBooked"] = true;
-        });
-      }
-    });
-    listSeatRight.forEach((seat) {
-      if(seat["isSelected"]){
-        setState(() {
-          seat["isBooked"] = true;
-        });
-      }
-    });
-  }
-
-  //The the inite state of the Widget before building
-  @override
-  void initState() {
-    initSeatValueToList(listSeatLeft, countSeatLeft, 'L');
-    initSeatValueToList(listSeatRight, countSeatRight, 'R');
-    super.initState();
+    // listSeatLeft.forEach((seat) {
+    //   if(seat["isSelected"]){
+    //     setState(() {
+    //       seat["isBooked"] = true;
+    //     });
+    //   }
+    // });
+    // listSeatRight.forEach((seat) {
+    //   if(seat["isSelected"]){
+    //     setState(() {
+    //       seat["isBooked"] = true;
+    //     });
+    //   }
+    // });
   }
 
 
@@ -100,8 +74,8 @@ class _ChooseSeatState extends State<ChooseSeat> {
                       SizedBox(height: 10,),
                       Row(
                         children: [
-                          Expanded(child: seatDesign(listSeatLeft),),
-                          Expanded(child: seatDesign(listSeatRight),),
+                          Expanded(child: SeatDeignStream(),),
+                          Expanded(child: SeatDeignStream(),),
                         ],
                       ),
                       Row(
@@ -171,7 +145,7 @@ class _ChooseSeatState extends State<ChooseSeat> {
   
   //The Seat actual Design
   Widget seatDesign(List dataSeat){
-    String? seatID;
+    
     return Container(
       child: GridView.builder(
         shrinkWrap: true,
@@ -182,12 +156,10 @@ class _ChooseSeatState extends State<ChooseSeat> {
           return Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: GestureDetector(
-                    onTap: () {
+                    onTap: () async {
                       setState(() {
                         dataSeat[index]["isSelected"] =! 
                         dataSeat[index]["isSelected"];
-                        dataSeat[index]["isSelected"] ? seatID = dataSeat[index]["id"] : null;
-                        print(seatID);
                       });
                     },
                     child: dataSeat[index]["isBooked"]
@@ -200,4 +172,69 @@ class _ChooseSeatState extends State<ChooseSeat> {
         ),
     );
   }
+}
+
+//For the StreamBuilder to fetch data from Firestore and Display for Available Flights
+class SeatDeignStream extends StatelessWidget {
+
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder(
+      stream: FirebaseFirestore.instance.collection('seats').snapshots(),
+      builder: (context, AsyncSnapshot snapshot){
+        if(!snapshot.hasData){
+          return Center(child: CircularProgressIndicator(),);
+        }
+        final seats = snapshot.data.docs;
+        List <SeatContainer> SeatContainers = [];
+        for(var seat in seats){
+          final seatID = seat['id'];
+          final isItAvailable = seat['isAvailable'];
+          final isItSelected = seat['isSelected'];
+          final isItBooked = seat['isBooked'];
+          final seatContainer = SeatContainer(seatID, isItAvailable, isItSelected, isItBooked,);
+          SeatContainers.add(seatContainer);
+        }
+        return Container(
+      child: GridView.builder(
+        shrinkWrap: true,
+        physics: NeverScrollableScrollPhysics(),
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3,),
+        itemCount: 36,
+        itemBuilder:(context, index) {
+          return ListView(children: SeatContainers);
+        }
+        ),
+    );
+      },
+      );
+  }
+
+  //updating to isSelected onPressed
+  void isSeatSelected(id)async {
+    bool contollor = false;
+    contollor =! contollor;
+    await FirebaseFirestore.instance.collection('Seats').doc(id).update({'isSelected' : contollor});
+    Fluttertoast.showToast(msg: 'You selected seat $id!', gravity: ToastGravity.TOP);
+  }
+
+  //Option. 1
+
+  // void updateToBooked(id) async {
+  //   await FirebaseFirestore.instance.collection('seats').doc(id).update({'isBooked': true});
+    
+  //   Fluttertoast.showToast(msg: 'Seat has been booked!', gravity: ToastGravity.TOP);
+  // }
+
+  //Option. 2
+
+  // //Changing seat to booked from isSelected
+  // void updatingToBooked(id) async {
+  //   final setToBooked = await FirebaseFirestore.instance.collection('seats').doc(id);
+  //   if(setToBooked){
+  //     setToBooked.update({'isBooked' : true});
+  //       };
+
+  //   Fluttertoast.showToast(msg: 'seat Booked', gravity: ToastGravity.TOP);
+  // }
 }

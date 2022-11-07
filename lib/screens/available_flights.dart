@@ -3,7 +3,6 @@ import 'package:tufly/details/flights.dart';
 import '../components/buttons.dart';
 import '../components/other_components.dart';
 import '../const.dart';
-import '../screens/select_seat.dart';
 import'../screens/choose_seat.dart';
 import '../components/available_flights_container.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';

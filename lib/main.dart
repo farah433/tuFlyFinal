@@ -10,7 +10,6 @@ import '../registrations/forgot_password.dart';
 import 'screens/user_reports.dart';
 import '../screens/flight_search.dart';
 import '../screens/available_flights.dart';
-import '../screens/select_seat.dart';
 import '../screens/adm_homescreen.dart';
 import '../screens/adm_addflights.dart';
 import'../screens/choose_seat.dart';
@@ -43,7 +42,6 @@ class MyApp extends StatelessWidget {
         UserReportsScreen.id: (context) => UserReportsScreen(),
         FlightSearch.id: (context) => FlightSearch(),
         AvailabeFlights.id: (context) => AvailabeFlights(),
-        SelectSeats.id: (context) => SelectSeats(),
         AdmHomeScreen.id: (context) => AdmHomeScreen(),
         EmailVerification.id: (context) => EmailVerification(),
         AddFlightsScreen.id: (context) => AddFlightsScreen(),
