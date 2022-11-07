@@ -216,36 +216,37 @@ class SeatDeignStream extends StatelessWidget {
 
   //updating to isSelected onPressed
   void isSeatSelected(id)async {
-    bool contollor = false;
-    contollor =true;
-    await FirebaseFirestore.instance.collection('Seats').doc(id).update({'isSelected' : contollor});
+
+    await FirebaseFirestore.instance.collection('Seats').doc(id).update({'isSelected' : true});
     Fluttertoast.showToast(msg: 'You selected seat $id!', gravity: ToastGravity.TOP);
   }
   void isSeatUnSelected(id)async {
-    bool contollor = false;
-    contollor =false;
-    await FirebaseFirestore.instance.collection('Seats').doc(id).update({'isSelected' : contollor});
+
+    await FirebaseFirestore.instance.collection('Seats').doc(id).update({'isSelected' : false});
     Fluttertoast.showToast(msg: 'You unselected seat $id!', gravity: ToastGravity.TOP);
   }
 
 
-  //Option. 1
+ // Option. 1
 
-  // void updateToBooked(id) async {
-  //   await FirebaseFirestore.instance.collection('seats').doc(id).update({'isBooked': true});
-    
-  //   Fluttertoast.showToast(msg: 'Seat has been booked!', gravity: ToastGravity.TOP);
-  // }
+  void updateToBooked(id) async {
+    if(isSeatSelected == true){
+      await FirebaseFirestore.instance.collection('seats').doc(id).update({'isBooked': true});
+
+      Fluttertoast.showToast(msg: 'Seat has been booked!', gravity: ToastGravity.TOP);
+
+    }
+   }
 
   //Option. 2
 
-  // //Changing seat to booked from isSelected
-  // void updatingToBooked(id) async {
-  //   final setToBooked = await FirebaseFirestore.instance.collection('seats').doc(id);
-  //   if(setToBooked){
-  //     setToBooked.update({'isBooked' : true});
-  //       };
-
-  //   Fluttertoast.showToast(msg: 'seat Booked', gravity: ToastGravity.TOP);
-  // }
-}
+  //Changing seat to booked from isSelected
+//   void updatingToBooked(id) async {
+//     final setToBooked = await FirebaseFirestore.instance.collection('seats').doc(id);
+//     if(setToBooked){
+//       setToBooked.update({'isBooked' : true});
+//         };
+//
+//     Fluttertoast.showToast(msg: 'seat Booked', gravity: ToastGravity.TOP);
+//   }
+ }
