@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 //Design of Each Seats
@@ -19,10 +20,17 @@ class _SeatContainerState extends State<SeatContainer> {
     return Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: GestureDetector(
+                    onDoubleTap: () async{
+                      setState(() {
+                        widget.isSelected =false;
+                      });
+                    },
                     onTap: () async {
                       setState(() {
-                        widget.isSelected =! widget.isSelected;
+                        widget.isSelected = true;
+                     //   await FirebaseFirestore.instance.collection('Seats').doc(id).update({'isSelected' : true});
                       });
+
                     },
                     child: widget.isBooked
                      ? Image.asset('images/seat3.png')
