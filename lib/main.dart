@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:mpesa_flutter_plugin/initializer.dart';
+import 'package:tufly/details/mpesa_keys.dart';
 import '../screens/splash_screen.dart';
 import '../registrations/signup_screen.dart';
 import '../registrations/login_screen.dart';
@@ -13,11 +15,17 @@ import '../screens/available_flights.dart';
 import '../screens/adm_homescreen.dart';
 import '../screens/adm_addflights.dart';
 import'../screens/choose_seat.dart';
+import '../screens/mpesa_number.dart';
 import 'package:provider/provider.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+
+  //For MPESA
+  MpesaFlutterPlugin.setConsumerKey(kConsumerKey);
+  MpesaFlutterPlugin.setConsumerSecret(kConsumerSecret);
+  
   runApp(MyApp());
 }
 
@@ -46,6 +54,7 @@ class MyApp extends StatelessWidget {
         EmailVerification.id: (context) => EmailVerification(),
         AddFlightsScreen.id: (context) => AddFlightsScreen(),
         ChooseSeat.id:(context) => ChooseSeat(),
+        MpesaNumberScreen.id: (context) => MpesaNumberScreen(),
       },
     );
   }

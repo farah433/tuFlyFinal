@@ -4,6 +4,7 @@ import '../components/buttons.dart';
 import'../components/seats_design.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import'../screens/mpesa_number.dart';
 
 class ChooseSeat extends StatefulWidget {
   static String id = 'choose_seat';
@@ -135,7 +136,10 @@ class _ChooseSeatState extends State<ChooseSeat> {
               ],
             ),
             SizedBox(height: 10,),
-            BottomButton('Next', kBorange, (){setSelectedToBooked();}),
+            BottomButton('Next', kBorange, (){
+              setSelectedToBooked();
+              Navigator.pushNamed(context, MpesaNumberScreen.id);
+              }),
           ],
         ),
         ),
