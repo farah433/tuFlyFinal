@@ -163,6 +163,7 @@ class _ChooseSeatState extends State<ChooseSeat> {
                     onDoubleTap: ()async{
                       setState(() {
                         dataSeat[index]["isSelected"] = false;
+
                       });
                     },
                     onTap: () async {
@@ -187,6 +188,7 @@ class SeatDeignStream extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     return StreamBuilder(
       stream: FirebaseFirestore.instance.collection('seats').snapshots(),
       builder: (context, AsyncSnapshot snapshot){
@@ -202,6 +204,7 @@ class SeatDeignStream extends StatelessWidget {
           final isItBooked = seat['isBooked'];
           final seatContainer = SeatContainer(seatID, isItAvailable, isItSelected, isItBooked,);
           SeatContainers.add(seatContainer);
+
         }
         return Container(
       child: GridView.builder(
@@ -234,8 +237,16 @@ class SeatDeignStream extends StatelessWidget {
  // Option. 1
 
   void updateToBooked(id) async {
+    //IF SEAT IS SELECTED AND PAYMENT MADE THEN => BOOK
     if(isSeatSelected == true){
+
       await FirebaseFirestore.instance.collection('seats').doc(id).update({'isBooked': true});
+
+      Fluttertoast.showToast(msg: 'Seat has been booked!', gravity: ToastGravity.TOP);
+
+    }
+    else if(isSeatUnSelected == false){
+      await FirebaseFirestore.instance.collection('seats').doc(id).update({'isBooked': false});
 
       Fluttertoast.showToast(msg: 'Seat has been booked!', gravity: ToastGravity.TOP);
 

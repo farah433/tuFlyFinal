@@ -10,6 +10,7 @@ class SeatContainer extends StatefulWidget {
   bool isSelected;
   bool isBooked;
 
+
   @override
   State<SeatContainer> createState() => _SeatContainerState();
 }
@@ -28,8 +29,7 @@ class _SeatContainerState extends State<SeatContainer> {
                     onTap: () async {
                       setState(() {
                         widget.isSelected = true;
-                     //   await FirebaseFirestore.instance.collection('Seats').doc(id).update({'isSelected' : true});
-                      });
+                       });
 
                     },
                     child: widget.isBooked
