@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 //Design of Each Seats
 class SeatContainer extends StatefulWidget {
@@ -16,6 +17,26 @@ class SeatContainer extends StatefulWidget {
 }
 
 class _SeatContainerState extends State<SeatContainer> {
+  void updateToBooked(seatId) async {
+    //IF SEAT IS SELECTED AND PAYMENT MADE THEN => BOOK
+
+
+      await FirebaseFirestore.instance.collection('seats').doc(seatId).update({'isBooked': true});
+      widget.isBooked = true;
+
+      Fluttertoast.showToast(msg: 'Seat has been booked!', gravity: ToastGravity.TOP);
+
+    print("object");
+
+    // else if(widget.isSelected == false){
+    //   widget.isBooked= false;
+    //   await FirebaseFirestore.instance.collection('seats').doc(seatId).update({'isBooked': false});
+    //
+    //   Fluttertoast.showToast(msg: 'Seat has been booked!', gravity: ToastGravity.TOP);
+    //
+    // }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -24,12 +45,19 @@ class _SeatContainerState extends State<SeatContainer> {
                     onDoubleTap: () async{
                       setState(() {
                         widget.isSelected =false;
+
+
+
                       });
+                     // updateToBooked(widget.seatId);
                     },
                     onTap: () async {
                       setState(() {
                         widget.isSelected = true;
+                        //if payment is made => book
+
                        });
+                      updateToBooked(widget.seatId); // brings error message cannot find the doc kwa firestore,some good progress lakini
 
                     },
                     child: widget.isBooked
