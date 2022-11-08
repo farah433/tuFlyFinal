@@ -21,12 +21,12 @@ class _SeatContainerState extends State<SeatContainer> {
     //IF SEAT IS SELECTED AND PAYMENT MADE THEN => BOOK
 
 
-      await FirebaseFirestore.instance.collection('seats').doc(seatId).update({'isBooked': true});
+      await FirebaseFirestore.instance.collection('seats').doc(widget.seatId).update({'isBooked': true});
       widget.isBooked = true;
 
       Fluttertoast.showToast(msg: 'Seat has been booked!', gravity: ToastGravity.TOP);
 
-    print("object");
+
 
     // else if(widget.isSelected == false){
     //   widget.isBooked= false;
