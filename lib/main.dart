@@ -14,9 +14,9 @@ import '../screens/flight_search.dart';
 import '../screens/available_flights.dart';
 import '../screens/adm_homescreen.dart';
 import '../screens/adm_addflights.dart';
-import'../screens/choose_seat.dart';
 import '../screens/mpesa_number.dart';
-import 'package:provider/provider.dart';
+import '../screens/ticket_screen.dart';
+import '../screens/select_seat.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -53,8 +53,9 @@ class MyApp extends StatelessWidget {
         AdmHomeScreen.id: (context) => AdmHomeScreen(),
         EmailVerification.id: (context) => EmailVerification(),
         AddFlightsScreen.id: (context) => AddFlightsScreen(),
-        ChooseSeat.id:(context) => ChooseSeat(),
         MpesaNumberScreen.id: (context) => MpesaNumberScreen(),
+        TicketScreen.id:(context) => TicketScreen(),
+        SelectSeat.id:(context) => SelectSeat(),
       },
     );
   }

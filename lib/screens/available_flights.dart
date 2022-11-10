@@ -3,7 +3,7 @@ import 'package:tufly/details/flights.dart';
 import '../components/buttons.dart';
 import '../components/other_components.dart';
 import '../const.dart';
-import'../screens/choose_seat.dart';
+import'../screens/select_seat.dart';
 import '../components/available_flights_container.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -41,16 +41,6 @@ class _AvailabeFlightsState extends State<AvailabeFlights> {
               padding: const EdgeInsets.symmetric(vertical: 20),
               child: Text('Flight(s) available on $newDate', style: kSplashTextStyle.copyWith(fontSize: 18),),
             ),
-            
-            AvailableFlightsContainer('Fly540', newFromWhere, newToWhere, '9PM', '7000', 'JHY75yOO', (){
-              Navigator.pushNamed(context, ChooseSeat.id, arguments: {
-                'flightCompany': flightCompany[0],
-                'date' : newDate,
-                'passangers': newPassangers,
-                'fromWhere':newFromWhere,
-                'toWhere':newToWhere,
-              });
-            }),
             AvailableFlightStream(newFromWhere, newToWhere, newDate),
           ],
           ),
@@ -86,7 +76,7 @@ class AvailableFlightStream extends StatelessWidget {
           final flightNum = flight['flight_no'];
           final availableFlightsContainer = AvailableFlightsContainer(companyName, fromWhere, toWhere, depTime, price, flightNum, (){
             //Pushing Arguments to the ChooseSeat screen
-            Navigator.pushNamed(context, ChooseSeat.id, arguments: {
+            Navigator.pushNamed(context, SelectSeat.id, arguments: {
               'companyName' : companyName,
               'fromWhere' : fromWhere,
               'toWhere' : toWhere,

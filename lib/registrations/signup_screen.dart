@@ -36,6 +36,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
   //For the Spinner
   bool showSpinner = false;
 
+  //For the Spinner
+  String? userId;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -93,6 +96,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
       final user = await FirebaseAuth.instance.createUserWithEmailAndPassword(
       email: emailController.text.trim(), password: passwordController.text.trim());
       if(user != null && fNameController != null && lNameController != null){
+
+        userId = FirebaseAuth.instance.currentUser!.uid;
+
         Navigator.pushNamed(context, EmailVerification.id);
       }
       addUserDetails(fNameController.text.trim(), lNameController.text.trim(), emailController.text.trim());
@@ -108,7 +114,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   //Function to Add users details to Firestore
   Future addUserDetails(String firstName, String lastName, String userEmail) async{
-    await FirebaseFirestore.instance.collection('users').add({
+    await FirebaseFirestore.instance.collection('users').doc(userId).set({
       'firstname': firstName,
       'lasttname': lastName,
       'email': userEmail,

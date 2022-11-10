@@ -5,11 +5,15 @@ import 'package:fluttertoast/fluttertoast.dart';
 //Design of Each Seats
 class SeatContainer extends StatefulWidget {
 
-  SeatContainer(this.seatId, this.isAvailable, this.isSelected, this.isBooked,);
-  String seatId;
-  bool isAvailable;
+  SeatContainer(this.seatID, this.isEmpty, this.isSelected, this.isBooked,);
+  String seatID;
+  bool isEmpty;
   bool isSelected;
   bool isBooked;
+
+
+
+
 
 
   @override
@@ -21,7 +25,7 @@ class _SeatContainerState extends State<SeatContainer> {
     //IF SEAT IS SELECTED AND PAYMENT MADE THEN => BOOK
 
 
-      await FirebaseFirestore.instance.collection('seats').doc(widget.seatId).update({'isBooked': true});
+      await FirebaseFirestore.instance.collection('seats').doc(widget.seatID).update({'isBooked': true});
       widget.isBooked = true;
 
       Fluttertoast.showToast(msg: 'Seat has been booked!', gravity: ToastGravity.TOP);
@@ -36,6 +40,7 @@ class _SeatContainerState extends State<SeatContainer> {
     //
     // }
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -57,7 +62,7 @@ class _SeatContainerState extends State<SeatContainer> {
                         //if payment is made => book
 
                        });
-                      updateToBooked(widget.seatId); // brings error message cannot find the doc kwa firestore,some good progress lakini
+                      // updateToBooked(widget.seatId); // brings error message cannot find the doc kwa firestore,some good progress lakini
 
                     },
                     child: widget.isBooked
