@@ -5,11 +5,12 @@ import 'package:fluttertoast/fluttertoast.dart';
 //Design of Each Seats
 class SeatContainer extends StatefulWidget {
 
-  SeatContainer(this.seatID, this.isEmpty, this.isSelected, this.isBooked,);
+  SeatContainer(this.seatID, this.isEmpty, this.isSelected, this.isBooked,this.bookNow);
   String seatID;
   bool isEmpty;
   bool isSelected;
   bool isBooked;
+  void Function () bookNow;
 
 
 
@@ -21,48 +22,55 @@ class SeatContainer extends StatefulWidget {
 }
 
 class _SeatContainerState extends State<SeatContainer> {
-  void updateToBooked(seatId) async {
-    //IF SEAT IS SELECTED AND PAYMENT MADE THEN => BOOK
+ String firstSelected= '0';
+ String secSelected= '0';
+ String thirdSelected= '0';
+ String fourthSelected= "0";
+ String fifthSelected= "0";
+ String sixthSelected= "0";
 
+  List<String>  chosenSeatsNumber  = [];
 
-      await FirebaseFirestore.instance.collection('seats').doc(widget.seatID).update({'isBooked': true});
-      widget.isBooked = true;
+  int selectedSeatsTimes = 0;
 
-      Fluttertoast.showToast(msg: 'Seat has been booked!', gravity: ToastGravity.TOP);
+  int seatCounter = 0;
 
-
-
-    // else if(widget.isSelected == false){
-    //   widget.isBooked= false;
-    //   await FirebaseFirestore.instance.collection('seats').doc(seatId).update({'isBooked': false});
-    //
-    //   Fluttertoast.showToast(msg: 'Seat has been booked!', gravity: ToastGravity.TOP);
-    //
-    // }
-  }
 
 
   @override
   Widget build(BuildContext context) {
+    // chosenSeatsNumber.add(firstSelected);
+    // chosenSeatsNumber.add(secSelected);
+    // chosenSeatsNumber.add(thirdSelected);
+
     return Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: GestureDetector(
                     onDoubleTap: () async{
+                      selectedSeatsTimes = 0;
+                      chosenSeatsNumber.removeLast();
                       setState(() {
                         widget.isSelected =false;
-
-
-
                       });
-                     // updateToBooked(widget.seatId);
+                    print(chosenSeatsNumber);
+                    Fluttertoast.showToast(msg: "Seat is unselected");
                     },
                     onTap: () async {
-                      setState(() {
-                        widget.isSelected = true;
-                        //if payment is made => book
+                      selectedSeatsTimes ++;
 
-                       });
-                      // updateToBooked(widget.seatId); // brings error message cannot find the doc kwa firestore,some good progress lakini
+
+
+                      if(selectedSeatsTimes == 1){
+                        setState(() {
+                          widget.isSelected = true;
+                        });
+                        widget.bookNow();
+                      }
+                      else{
+                        Fluttertoast.showToast(msg: "Seat already selected!");
+                      }
+
+
 
                     },
                     child: widget.isBooked
