@@ -1,4 +1,6 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../components/buttons.dart';
 import '../components/printable_data.dart';
@@ -7,8 +9,36 @@ import 'package:printing/printing.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 
-class TicketScreen extends StatelessWidget {
+class TicketScreen extends StatefulWidget {
   static String id = "ticketScreen";
+
+  @override
+  State<TicketScreen> createState() => _TicketScreenState();
+}
+
+class _TicketScreenState extends State<TicketScreen> {
+
+  String? fullname;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getUserData();
+    print(fullname);
+  }
+
+  //get users data
+  void getUserData()async {
+    await FirebaseFirestore.instance.collection('users')
+    .doc(FirebaseAuth.instance.currentUser!.uid).
+    get().then((value) => fullname = value.data()!['firstname']);
+
+    setState(() {
+      fullname;
+    });
+    print(fullname);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +52,7 @@ class TicketScreen extends StatelessWidget {
     final newPrice = routeData['price'];
     final newFlightNum = routeData['flightNum'];
     final newNewDate = routeData['newDate'];
-
+    final newSeats = routeData['seats'];
     
     return Scaffold(
       appBar: AppBar(
@@ -48,7 +78,7 @@ class TicketScreen extends StatelessWidget {
                 ),
                 SizedBox(height: 10,),
                 Text('TRAVELLER', style: kfightName,),
-                Text('First name and Last name', style: kBodyTextStyle,),
+                Text('Name : $fullname', style: kBodyTextStyle,),
                 SizedBox(height: 10,),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -93,7 +123,7 @@ class TicketScreen extends StatelessWidget {
                     Column(
                       children: [
                         Text('SEATS', style: kfightName,),
-                        Text('DE, FE', style: kBodyTextStyle,),
+                        Text(newSeats, style: kBodyTextStyle,),
                       ],
                     ),
                   ],
@@ -111,6 +141,7 @@ class TicketScreen extends StatelessWidget {
       ),
     );
   }
+
 Future<void> printDoc() async {
   final image1 = await imageFromAssetBundle('assets/images/logo.png');
   final doc = pw.Document();
@@ -122,5 +153,4 @@ Future<void> printDoc() async {
     await Printing.layoutPdf(
       onLayout: (PdfPageFormat format) async => doc.save());
 }
-  
 }

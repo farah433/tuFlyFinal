@@ -90,6 +90,7 @@ class _MpesaNumberScreenState extends State<MpesaNumberScreen> {
     final newPrice = routeData['price'];
     final newFlightNum = routeData['flightNum'];
     final newNewDate = routeData['newDate'];
+    final newSeats = routeData['seats'];
 
     
     return Scaffold(
@@ -114,7 +115,7 @@ class _MpesaNumberScreenState extends State<MpesaNumberScreen> {
                 (value) => value != null && value.length < 9 || value!.length > 9 
                   ? 'The number must be of 9 Characters': null,),
                   SizedBox(height: 40,),
-                BottomButton('PAY $newPrice', kBorange, (){startTransaction(1.00, "254${numberController.text.trim()}");}),
+                BottomButton('MAKE PAYMENT', kBorange, (){startTransaction(1.00, "254${numberController.text.trim()}");}),
                 BottomButton('TO TICKET', kBorange, (){Navigator.pushNamed(context, TicketScreen.id, arguments: {
                       'companyName': newCompanyName,
                       'fromWhere':newFromWhere,
@@ -123,6 +124,7 @@ class _MpesaNumberScreenState extends State<MpesaNumberScreen> {
                       'depTime':newDepTime,
                       'FlightNum':newFlightNum,
                       'price':newPrice,
+                      'seats' : newSeats,
                 });}),
               ],
             ),

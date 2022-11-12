@@ -25,7 +25,6 @@ class _AvailabeFlightsState extends State<AvailabeFlights> {
     final newFromWhere = routeData['fromWhere'];
     final newToWhere = routeData['toWhere'];
     final newDate = routeData['selecteddate'];
-    final newPassangers = routeData['passangers'];
 
     return Scaffold(
       backgroundColor: Colors.white,

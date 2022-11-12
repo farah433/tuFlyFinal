@@ -61,8 +61,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
               ? 'Enter your first name': null,
               ),
               RegTextField('LAST NAME', 'Enter your last name', false, lNameController,
-              (value) => value == null
-              ? 'Enter full name min. 6 characters': null,
+              (value) => value!.isEmpty
+              ? 'Enter your last name': null,
               ),
               RegTextField('EMAIL ADDRESS', 'Enter email address', false, emailController,
               (email) => email != null && !EmailValidator.validate(email)
@@ -101,7 +101,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
         Navigator.pushNamed(context, EmailVerification.id);
       }
-      addUserDetails(fNameController.text.trim(), lNameController.text.trim(), emailController.text.trim());
+      addUserDetails(fNameController.text.trim(), lNameController.text.trim(), emailController.text.trim(), userId);
     } on FirebaseAuthException catch (error){
       Fluttertoast.showToast(msg: error.message!, gravity: ToastGravity.TOP);
       // Utils.showSnackBar(e.messengerKey);
@@ -113,12 +113,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
   }
 
   //Function to Add users details to Firestore
-  Future addUserDetails(String firstName, String lastName, String userEmail) async{
+  Future addUserDetails(String firstName, String lastName, String userEmail, String? myId) async{
     await FirebaseFirestore.instance.collection('users').doc(userId).set({
       'firstname': firstName,
       'lasttname': lastName,
       'email': userEmail,
-      // 'phone number': phoneNumber,
+      'uid': myId,
     });
   }
 

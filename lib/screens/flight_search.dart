@@ -15,11 +15,6 @@ class FlightSearch extends StatefulWidget {
 
 class _FlightSearchState extends State<FlightSearch> {
   DateTime? selectedDate;
-  //Variables inside different fields
-  int passangers = 1;
-
-  //number of valid passangers 1-7
-  void numberOfPassangers() {}
 
   //Starting value of the dropdownMenu
   String selectedcountyFrom = countiesListFrom[0];
@@ -179,51 +174,6 @@ class _FlightSearchState extends State<FlightSearch> {
                     SizedBox(
                       height: 20,
                     ),
-                    FlightDetails(
-                        300,
-                        'PASSANGER(S) ',
-                        Icon(Icons.airline_seat_recline_extra_rounded),
-                        Row(
-                          children: [
-                            IconButtomCalc(
-                              () {
-                                setState(() {
-                                  if (passangers > 1) {
-                                    passangers--;
-                                  } else {
-                                    passangers = 1;
-                                  }
-                                });
-                              },
-                              Icon(
-                                Icons.remove,
-                                color: Colors.white,
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(5.0),
-                              child: Text(
-                                passangers.toString(),
-                                style: kSplashTextStyle,
-                              ),
-                            ),
-                            IconButtomCalc(
-                              () {
-                                setState(() {
-                                  if (passangers < 7) {
-                                    passangers++;
-                                  } else {
-                                    passangers = 7;
-                                  }
-                                });
-                              },
-                              Icon(
-                                Icons.add,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ],
-                        )),
                     SizedBox(
                       height: 20,
                     ),
@@ -251,7 +201,6 @@ class _FlightSearchState extends State<FlightSearch> {
         'toWhere': selectedcountyTo,
         'selecteddate':
             '${selectedDate!.day}/${selectedDate!.month}/${selectedDate!.year}',
-        'passangers': passangers,
       });
     } else {
       Fluttertoast.showToast(

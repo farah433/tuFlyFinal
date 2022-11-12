@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:tufly/screens/mpesa_number.dart';
 import '../components/buttons.dart';
 import'../const.dart';
@@ -43,6 +44,8 @@ class _SelectSeatState extends State<SelectSeat> {
     final newFlightNum = routeData['flightNum'];
     final newNewDate = routeData['newDate'];
 
+    var finalPrice = newPrice * seatsNumber;
+
 
 
 
@@ -79,10 +82,10 @@ class _SelectSeatState extends State<SelectSeat> {
                         Row(
                           children: [
                             SeatsAStream(),
-                            // SeatsBStream(),
-                            // SeatsCStream(),
-                            // SeatsDStream(),
-                            // SeatsEStream(),
+                            SeatsBStream(),
+                            SeatsCStream(),
+                            SeatsDStream(),
+                            SeatsEStream(),
 
                           ],
                         ),
@@ -100,6 +103,12 @@ class _SelectSeatState extends State<SelectSeat> {
                             Text(' Reserved', style: kBodyTextStyle.copyWith(fontSize: 14),),
                           ],
                         ),
+                        SizedBox(height: 10,),
+                        Text('Seats', style: kfightNameB),
+                        Text(chosenSeatsNumber.toString() , style: kfightName.copyWith(fontSize: 16)),
+                        Text('Ksh', style: kfightNameB.copyWith(fontSize:  20),),
+                        SizedBox(width: 3,),
+                        Text(finalPrice.toString(), style: kfightName.copyWith(fontSize: 20),),
                         ],
                     ),
                   ),
@@ -129,33 +138,31 @@ class _SelectSeatState extends State<SelectSeat> {
                         Text(newToWhere, style: kfightName),
                         SizedBox(height: 20),
                         SizedBox(height: 20),
-                        Text(chosenSeatsNumber.toString() , style: kfightName.copyWith(fontSize: 18, color:kPorange,fontWeight: FontWeight.w300,),),
-                        //Text('D49', style: kfightName.copyWith(fontSize: 30,color:kPorange, fontWeight: FontWeight.w300),),
-                        Text('Seats', style: kfightNameB),
                         SizedBox(height: 20),
-                          Text('Ksh', style: kfightNameB.copyWith(fontSize:  20),),
-                          SizedBox(width: 3,),
-                          Text(newPrice * seatsNumber, style: kfightName.copyWith(fontSize: 30,color:kPorange, fontWeight: FontWeight.w300),),
-                        Text('Price', style: kfightNameB),
                       ],
                     ),
                   ),
                 ],
               ),
               SizedBox(height: 10,),
-              BottomButton('Next', kBorange, (){
+              PaymentBottomButton('Next', kBorange, (){
 
-                Navigator.pushNamed(context, MpesaNumberScreen.id, arguments: {
-                  'companyName': newCompanyName,
-                  'fromWhere':newFromWhere,
-                  'toWhere':newToWhere,
-                  'newDate':newNewDate,
-                  'depTime':newDepTime,
-                  'FlightNum':newFlightNum,
-                  'price':newPrice,
+                if(chosenSeatsNumber.isEmpty){
+                  Fluttertoast.showToast(msg: "Kindly select a seat!", gravity: ToastGravity.TOP);
+                }else{
+                  Navigator.pushNamed(context, MpesaNumberScreen.id, arguments: {
+                    'companyName': newCompanyName,
+                    'fromWhere':newFromWhere,
+                    'toWhere':newToWhere,
+                    'newDate':newNewDate,
+                    'depTime':newDepTime,
+                    'FlightNum':newFlightNum,
+                    'price':newPrice,
+                    'seats': chosenSeatsNumber.toString(),
 
 
                 });
+                }
                 }),
             ],
           ),
@@ -179,7 +186,212 @@ class _SeatsAStreamState extends State<SeatsAStream> {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
-      stream: FirebaseFirestore.instance.collection('SeatsA').snapshots(),
+      stream: FirebaseFirestore.instance.collection('SeatsA').orderBy('id').snapshots(),
+      builder: (context, AsyncSnapshot snapshot){
+        if(!snapshot.hasData){
+          return Center(child: CircularProgressIndicator(),);
+        }
+        final seats = snapshot.data.docs;
+        List <SeatContainer> seatContainers = [];
+        for(var seat in seats){
+          final seatID = seat['id'];
+          final isSelected = seat['isSelected'];
+          final isEmpty = seat['isEmpty'];
+          final isBooked = seat['isBooked'];
+          final seatContainer = SeatContainer(seatID, isEmpty, isSelected, isBooked,
+                  () async {
+
+         print(seatID);
+         chosenSeatsNumber.add(seatID);
+         print(chosenSeatsNumber);
+
+
+
+         seatsNumber = chosenSeatsNumber.length;
+         seatPrice =  seatsNumber * 6000;
+
+
+
+
+
+          });
+          seatContainers.add(seatContainer);
+
+
+
+        }
+        return Expanded(
+          child: Column(
+            children: seatContainers),);
+      },
+      );
+  }
+}
+
+//For the StreamBuilder to fetch data from Firestore and Display for Flight Seats B
+class SeatsBStream extends StatelessWidget {
+
+
+  int selectedSeatsTimes = 0;
+
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder(
+      stream: FirebaseFirestore.instance.collection('SeatsB').orderBy('id').snapshots(),
+      builder: (context, AsyncSnapshot snapshot){
+        if(!snapshot.hasData){
+          return Center(child: CircularProgressIndicator(),);
+        }
+        final seats = snapshot.data.docs;
+        List <SeatContainer> seatContainers = [];
+        for(var seat in seats){
+          final seatID = seat['id'];
+          final isSelected = seat['isSelected'];
+          final isEmpty = seat['isEmpty'];
+          final isBooked = seat['isBooked'];
+          final seatContainer = SeatContainer(seatID, isEmpty, isSelected, isBooked,
+                  () async {
+
+         print(seatID);
+         chosenSeatsNumber.add(seatID);
+         print(chosenSeatsNumber);
+
+
+
+         seatsNumber = chosenSeatsNumber.length;
+         seatPrice =  seatsNumber * 6000;
+
+
+
+
+
+          });
+          seatContainers.add(seatContainer);
+
+
+
+        }
+        return Expanded(
+          child: Column(
+            children: seatContainers),);
+      },
+      );
+  }
+}
+
+
+//For the StreamBuilder to fetch data from Firestore and Display for Flight Seats C
+class SeatsCStream extends StatelessWidget {
+
+
+  int selectedSeatsTimes = 0;
+
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder(
+      stream: FirebaseFirestore.instance.collection('SeatsC').orderBy('id').snapshots(),
+      builder: (context, AsyncSnapshot snapshot){
+        if(!snapshot.hasData){
+          return Center(child: CircularProgressIndicator(),);
+        }
+        final seats = snapshot.data.docs;
+        List <SeatContainer> seatContainers = [];
+        for(var seat in seats){
+          final seatID = seat['id'];
+          final isSelected = seat['isSelected'];
+          final isEmpty = seat['isEmpty'];
+          final isBooked = seat['isBooked'];
+          final seatContainer = SeatContainer(seatID, isEmpty, isSelected, isBooked,
+                  () async {
+
+         print(seatID);
+         chosenSeatsNumber.add(seatID);
+         print(chosenSeatsNumber);
+
+
+
+         seatsNumber = chosenSeatsNumber.length;
+         seatPrice =  seatsNumber * 6000;
+
+
+
+
+
+          });
+          seatContainers.add(seatContainer);
+
+
+
+        }
+        return Expanded(
+          child: Column(
+            children: seatContainers),);
+      },
+      );
+  }
+}
+
+//For the StreamBuilder to fetch data from Firestore and Display for Flight Seats C
+class SeatsDStream extends StatelessWidget {
+
+
+  int selectedSeatsTimes = 0;
+
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder(
+      stream: FirebaseFirestore.instance.collection('SeatsD').orderBy('id').snapshots(),
+      builder: (context, AsyncSnapshot snapshot){
+        if(!snapshot.hasData){
+          return Center(child: CircularProgressIndicator(),);
+        }
+        final seats = snapshot.data.docs;
+        List <SeatContainer> seatContainers = [];
+        for(var seat in seats){
+          final seatID = seat['id'];
+          final isSelected = seat['isSelected'];
+          final isEmpty = seat['isEmpty'];
+          final isBooked = seat['isBooked'];
+          final seatContainer = SeatContainer(seatID, isEmpty, isSelected, isBooked,
+                  () async {
+
+         print(seatID);
+         chosenSeatsNumber.add(seatID);
+         print(chosenSeatsNumber);
+
+
+
+         seatsNumber = chosenSeatsNumber.length;
+         seatPrice =  seatsNumber * 6000;
+
+
+
+
+
+          });
+          seatContainers.add(seatContainer);
+
+
+
+        }
+        return Expanded(
+          child: Column(
+            children: seatContainers),);
+      },
+      );
+  }
+}
+
+//For the StreamBuilder to fetch data from Firestore and Display for Flight Seats C
+class SeatsEStream extends StatelessWidget {
+
+
+  int selectedSeatsTimes = 0;
+
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder(
+      stream: FirebaseFirestore.instance.collection('SeatsE').orderBy('id').snapshots(),
       builder: (context, AsyncSnapshot snapshot){
         if(!snapshot.hasData){
           return Center(child: CircularProgressIndicator(),);

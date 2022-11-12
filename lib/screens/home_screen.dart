@@ -8,6 +8,7 @@ import '../screens/flight_search.dart';
 import '../details/flights.dart';
 import '../details/county.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class HomeScreen extends StatefulWidget {
   static String id = 'home_screen';
@@ -17,6 +18,29 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+
+  String? name1;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getUserData();
+    print(name1);
+  }
+
+  //get users data
+  void getUserData()async {
+    await FirebaseFirestore.instance.collection('users')
+    .doc(FirebaseAuth.instance.currentUser!.uid).
+    get().then((value) => name1 = value.data()!['firstname']);
+
+    setState(() {
+      name1;
+    });
+    print(name1);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,7 +49,7 @@ class _HomeScreenState extends State<HomeScreen> {
         backgroundColor: kPorange,
         leading: Image.asset('images/logo.png'),
         title: Text(
-          'Good morning, Farah!',
+          'Good morning, $name1',
         ),
         actions: [
           IconButton(
