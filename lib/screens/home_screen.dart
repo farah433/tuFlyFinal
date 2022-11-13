@@ -22,14 +22,15 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
 
-  String? name1;
+   String? name1;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    getUserData();
-    print(name1);
+     getUserData();
+    getUser4();
+
   }
 
   //get users data
@@ -39,10 +40,57 @@ class _HomeScreenState extends State<HomeScreen> {
     get().then((value) => name1 = value.data()!['firstname']);
 
     setState(() {
-      name1;
+       name1;
     });
     print(name1);
   }
+
+  // Future<void> _getUserDetails() async {
+  //   String uid = FirebaseAuth.instance.currentUser!.uid;
+  //   DocumentSnapshot doc = await FirebaseFirestore.instance.collection('users').doc(uid).get();
+  //
+  //   if(doc.exists) { // this will check availability of document
+  //     name1 = doc.data()!['firstname'].toString();
+  //
+  //   }else{
+  //    name1 = "User";
+  //   }
+  //   setState((){});
+  // }
+  // getUser ()async{
+  //   String uid = FirebaseAuth.instance.currentUser!.uid;
+  //   await FirebaseFirestore.instance.collection('users').doc(uid).get().then((user) {
+  //     user.docs.forEach((result) {
+  //       name1= result.data()['firstname'];
+  //
+  //     });
+  // }
+  // }
+  //
+  getUser4(){
+    String uid = FirebaseAuth.instance.currentUser!.uid;
+    FutureBuilder<DocumentSnapshot<Map<String, dynamic>>>(
+      future: FirebaseFirestore.instance
+          .collection('users')
+          .doc(uid)
+          .get(),
+      builder: (_, snapshot) {
+        if (snapshot.hasData) {
+          var data = snapshot.data!.data();
+          var value = data!['firstname'];
+
+          setState(() {
+            name1 = value;
+          });
+          print(value);
+          return value;
+        }
+        return const Text('User');
+      },
+    );
+  }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -224,18 +272,25 @@ class TodayFlightStream extends StatelessWidget {
 }
 
 //For the StreamBuilder to fetch data from Firestore and Display YOUR LAST TRIP
-class LastTripFlightStream extends StatelessWidget {
+class LastTripFlightStream extends StatefulWidget {
 
 
+  @override
+  State<LastTripFlightStream> createState() => _LastTripFlightStreamState();
+}
+
+class _LastTripFlightStreamState extends State<LastTripFlightStream> {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
       stream: FirebaseFirestore.instance.collection('TripUsers').doc(FirebaseAuth.instance.currentUser!.uid).collection('trips').snapshots(),
       builder: (context, AsyncSnapshot snapshot){
         if(!snapshot.hasData){
-          hasTrip = true;
           return Center(child: CircularProgressIndicator(),);
         }
+        setState(() {
+          hasTrip = true;
+        });
         final trips = snapshot.data.docs;
         List <LastTripWithData> todaysFlightsContainers = [];
         for(var trip in trips){
