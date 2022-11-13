@@ -7,7 +7,6 @@ import'../components/seats_design.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 List chosenSeatsNumber= [];
-var collection = FirebaseFirestore.instance.collection('SeatsA');
 int seatsNumber = 0;
 int seatPrice = 0;
 int airlineChargeperSeat = 0;
@@ -44,8 +43,8 @@ class _SelectSeatState extends State<SelectSeat> {
     final newFlightNum = routeData['flightNum'];
     final newNewDate = routeData['newDate'];
 
-    var finalPrice = newPrice * seatsNumber;
-
+  //  var finalPrice = int.parse(newPrice) * seatsNumber;
+       airlineChargeperSeat = int.parse(newPrice);
 
 
 
@@ -108,7 +107,7 @@ class _SelectSeatState extends State<SelectSeat> {
                         Text(chosenSeatsNumber.toString() , style: kfightName.copyWith(fontSize: 16)),
                         Text('Ksh', style: kfightNameB.copyWith(fontSize:  20),),
                         SizedBox(width: 3,),
-                        Text(finalPrice.toString(), style: kfightName.copyWith(fontSize: 20),),
+                        Text(seatPrice.toString(), style: kfightName.copyWith(fontSize: 20),),
                         ],
                     ),
                   ),
@@ -208,13 +207,19 @@ class _SeatsAStreamState extends State<SeatsAStream> {
 
 
          seatsNumber = chosenSeatsNumber.length;
-         seatPrice =  seatsNumber * 6000;
+         seatPrice =  seatsNumber * airlineChargeperSeat;
 
 
 
 
 
-          });
+          } ,
+                  ()async{
+                print(seatID);
+                chosenSeatsNumber.removeLast();
+                print(chosenSeatsNumber);
+              }
+          );
           seatContainers.add(seatContainer);
 
 
@@ -259,13 +264,20 @@ class SeatsBStream extends StatelessWidget {
 
 
          seatsNumber = chosenSeatsNumber.length;
-         seatPrice =  seatsNumber * 6000;
+         seatPrice =  seatsNumber * airlineChargeperSeat;
 
 
 
 
 
-          });
+          }
+          ,
+              ()async{
+                print(seatID);
+                chosenSeatsNumber.removeLast();
+                print(chosenSeatsNumber);
+              }
+          );
           seatContainers.add(seatContainer);
 
 
@@ -311,13 +323,19 @@ class SeatsCStream extends StatelessWidget {
 
 
          seatsNumber = chosenSeatsNumber.length;
-         seatPrice =  seatsNumber * 6000;
+         seatPrice =  seatsNumber * airlineChargeperSeat;
 
 
 
 
 
-          });
+          } ,
+                  ()async{
+                print(seatID);
+                chosenSeatsNumber.removeLast();
+                print(chosenSeatsNumber);
+              }
+          );
           seatContainers.add(seatContainer);
 
 
@@ -362,13 +380,19 @@ class SeatsDStream extends StatelessWidget {
 
 
          seatsNumber = chosenSeatsNumber.length;
-         seatPrice =  seatsNumber * 6000;
+         seatPrice =  seatsNumber * airlineChargeperSeat;
 
 
 
 
 
-          });
+          }
+              ,
+                  ()async{
+                print(seatID);
+                chosenSeatsNumber.removeLast();
+                print(chosenSeatsNumber);
+              });
           seatContainers.add(seatContainer);
 
 
@@ -413,13 +437,20 @@ class SeatsEStream extends StatelessWidget {
 
 
          seatsNumber = chosenSeatsNumber.length;
-         seatPrice =  seatsNumber * 6000;
+         seatPrice =  seatsNumber * airlineChargeperSeat;
 
 
 
 
 
-          });
+          }
+              ,
+                  ()async{
+                print(seatID);
+                chosenSeatsNumber.removeLast();
+                print(chosenSeatsNumber);
+              }
+          );
           seatContainers.add(seatContainer);
 
 
