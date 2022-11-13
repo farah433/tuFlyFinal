@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:tufly/components/available_flights_container.dart';
+import 'package:tufly/screens/select_seat.dart';
 import '/const.dart';
 import '../components/other_components.dart';
 import 'user_reports.dart';
@@ -9,6 +10,8 @@ import '../details/flights.dart';
 import '../details/county.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+
+bool hasTrip = false;
 
 class HomeScreen extends StatefulWidget {
   static String id = 'home_screen';
@@ -62,7 +65,7 @@ class _HomeScreenState extends State<HomeScreen> {
           IconButton(
               onPressed: () {
                 FirebaseAuth.instance.signOut();
-                Navigator.pop(context);
+                Navigator.of(context).popUntil((route) => route.isFirst);
               },
               icon: Icon(
                 Icons.logout,
@@ -140,7 +143,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   'YOUR LAST FLIGHT',
                   style: kSplashTextStyle.copyWith(fontSize: 20),
                 ),
+                hasTrip ? LastTripFlightStream() :
                 HomeReusableContainer(150, 400, 'No booking yet!', (){}),
+                // LastTripWithData('jambojet', 'jkjutb', 'Mairobi', 'Mombasa', '34/01/2022', 'TimeoftheDat 05.30', '[54,46]'),
                 SizedBox(
                   height: 20,
                 ),
@@ -153,18 +158,19 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: ListView.builder(
                     scrollDirection: Axis.horizontal,
                     itemCount: 1,
-                    itemBuilder: (context, index) => Row(
-                      children: [
-                        TodaysSchedule('748 Air', 'Nairobi', 'Eldoret', '10PM',
-                            'JHNHG74', 8000),
-                        TodaysSchedule('Skyward', 'Busia', 'Nairobi', '9PM',
-                            'JHN7874', 9000),
-                        TodaysSchedule('Jambojet', 'Eldoret', 'Busia', '10PM',
-                            'GFN89OK', 1000),
-                        TodaysSchedule('748 Air', 'Nairobi', 'Eldoret', '10PM',
-                            'JHNHG74', 8000),
-                      ],
-                    ),
+                    itemBuilder: (context, index) => TodayFlightStream(),
+                    // Row(
+                    //   children: [
+                    //     TodaysSchedule('748 Air', 'Nairobi', 'Eldoret', '10PM',
+                    //         'JHNHG74', 8000),
+                    //     TodaysSchedule('Skyward', 'Busia', 'Nairobi', '9PM',
+                    //         'JHN7874', 9000),
+                    //     TodaysSchedule('Jambojet', 'Eldoret', 'Busia', '10PM',
+                    //         'GFN89OK', 1000),
+                    //     TodaysSchedule('748 Air', 'Nairobi', 'Eldoret', '10PM',
+                    //         'JHNHG74', 8000),
+                    //   ],
+                    // ),
                   ),
                 ),
               ],
@@ -183,3 +189,70 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 }
+
+//For the StreamBuilder to fetch data from Firestore and Display TODAYS Flights
+class TodayFlightStream extends StatelessWidget {
+
+
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder(
+      stream: FirebaseFirestore.instance.collection('Flights').snapshots(),
+      builder: (context, AsyncSnapshot snapshot){
+        if(!snapshot.hasData){
+          return Center(child: CircularProgressIndicator(),);
+        }
+        final flights = snapshot.data.docs;
+        List <TodaysSchedule> TodaysFlightsContainers = [];
+        for(var flight in flights){
+          final companyName = flight['company'];
+          final fromWhere = flight['from'];
+          final toWhere = flight['to'];
+          final depTime = flight['time'];
+          final price = flight['price'];
+          final flightNum = flight['flight_no'];
+          final TodaysFlightsContainer = TodaysSchedule(companyName, fromWhere, toWhere, depTime, flightNum, price);
+          TodaysFlightsContainers.add(TodaysFlightsContainer);
+        }
+        return Row(
+          children:
+            TodaysFlightsContainers,
+        );
+      },
+      );
+  }
+}
+
+//For the StreamBuilder to fetch data from Firestore and Display YOUR LAST TRIP
+class LastTripFlightStream extends StatelessWidget {
+
+
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder(
+      stream: FirebaseFirestore.instance.collection('TripUsers').doc(FirebaseAuth.instance.currentUser!.uid).collection('trips').snapshots(),
+      builder: (context, AsyncSnapshot snapshot){
+        if(!snapshot.hasData){
+          hasTrip = true;
+          return Center(child: CircularProgressIndicator(),);
+        }
+        final trips = snapshot.data.docs;
+        List <LastTripWithData> todaysFlightsContainers = [];
+        for(var trip in trips){
+          final companyName = trip['company'];
+          final fromWhere = trip['from'];
+          final toWhere = trip['to'];
+          final depTime = trip['time'];
+          final depDate = trip['date'];
+          final seat = trip['seats'];
+          final flightNum = trip['flight_no'];
+          final todaysFlightsContainer = LastTripWithData(companyName, flightNum, fromWhere, toWhere, depDate, depTime, seat);
+          todaysFlightsContainers.add(todaysFlightsContainer);
+        }
+        return Column(
+          children: todaysFlightsContainers);
+      },
+      );
+  }
+}
+

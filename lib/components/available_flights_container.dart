@@ -182,7 +182,7 @@ class TodaysSchedule extends StatelessWidget {
   String toWhere;
   String depTime;
   String flightNumber;
-  int price;
+  String price;
   
 
   @override
@@ -191,7 +191,7 @@ class TodaysSchedule extends StatelessWidget {
       padding: EdgeInsets.only(right: 10, top: 10),
       child: Container(
                 height: 140,
-                width: 220,
+                width: 250,
                 decoration: BoxDecoration(
                   color: kLastFlightorange,
                   borderRadius: BorderRadius.circular(10),

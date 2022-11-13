@@ -1,13 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import'../screens/home_screen.dart';
 
 import '../components/buttons.dart';
-import '../components/printable_data.dart';
 import '../const.dart';
-import 'package:printing/printing.dart';
-import 'package:pdf/pdf.dart';
-import 'package:pdf/widgets.dart' as pw;
 
 class TicketScreen extends StatefulWidget {
   static String id = "ticketScreen";
@@ -133,7 +130,9 @@ class _TicketScreenState extends State<TicketScreen> {
                 SizedBox(height: 5,),
                 Text('Contact the branch for any clarifications.', style: kBodyTextStyle.copyWith(color: Colors.grey),),
                 SizedBox(height: 15,),
-                BottomButton('Save as PDF', kBorange, (){printDoc();}),
+                BottomButton('BACK TO HOMESCREEN', kBorange, (){
+                  Navigator.pushNamed(context, HomeScreen.id);
+                }),
               ],
             ),
             ),
@@ -142,15 +141,4 @@ class _TicketScreenState extends State<TicketScreen> {
     );
   }
 
-Future<void> printDoc() async {
-  final image1 = await imageFromAssetBundle('assets/images/logo.png');
-  final doc = pw.Document();
-  doc.addPage(pw.Page(
-    pageFormat: PdfPageFormat.a4,
-    build: (pw.Context context){
-      return buildPrintableData(image1);
-    }));
-    await Printing.layoutPdf(
-      onLayout: (PdfPageFormat format) async => doc.save());
-}
 }

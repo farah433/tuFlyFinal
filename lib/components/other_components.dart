@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
 import 'package:url_launcher/link.dart';
@@ -430,6 +431,89 @@ class IconButtomCalc extends StatelessWidget {
         padding: const EdgeInsets.all(4.0),
         onPressed: onpressed,
         icon: icon,
+      ),
+    );
+  }
+}
+
+
+//LAST TRIP CONTAINER WITH DATA
+class LastTripWithData extends StatelessWidget {
+
+  LastTripWithData(this.company, this.flightNum, this.fromWhere, this.toWhere, this.date, this.time, this.seatId);
+
+  String company;
+  String flightNum;
+  String fromWhere;
+  String toWhere;
+  String date;
+  String time;
+  String seatId;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.only(right: 10, top: 10),
+      child: Container(
+        height: 150,
+        width: 400,
+        decoration: BoxDecoration(
+          color: kBorange,
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Padding(
+          padding: EdgeInsets.all(5.0),
+          child: Column(
+            children: [
+              Row(
+                children: [
+                  Text(fromWhere),
+                  Icon(Icons.flight_land_rounded),
+                  Text(toWhere),
+                ],
+              ),
+              SizedBox(height: 5,),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Container(
+                            height: 50,
+                            width: 50,
+                            decoration: BoxDecoration(
+                              color: kPorange.withAlpha(200),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Image.asset('images/$company.png'),
+                          ),
+                          Column(
+                            children: [
+                              Text('DATE & TIME'),
+                              Text(date + time),
+                            ],
+                          ),
+                ],
+              ),
+              SizedBox(height: 5,),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Column(
+                    children: [
+                      Text('FLIGHT NO.'),
+                      Text(flightNum),
+                    ],
+                  ),
+                  Column(
+                    children: [
+                      Text('SEATs'),
+                      Text(seatId),
+                    ],
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

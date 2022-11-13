@@ -1,5 +1,6 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:mpesa_flutter_plugin/initializer.dart';
@@ -88,7 +89,7 @@ class _MpesaNumberScreenState extends State<MpesaNumberScreen> {
     final newFromWhere = routeData['fromWhere'];
     final newDepTime = routeData['depTime'];
     final newPrice = routeData['price'];
-    final newFlightNum = routeData['flightNum'];
+    final newFlightNum = routeData['FlightNum'];
     final newNewDate = routeData['newDate'];
     final newSeats = routeData['seats'];
 
@@ -116,7 +117,9 @@ class _MpesaNumberScreenState extends State<MpesaNumberScreen> {
                   ? 'The number must be of 9 Characters': null,),
                   SizedBox(height: 40,),
                 BottomButton('MAKE PAYMENT', kBorange, (){startTransaction(1.00, "254${numberController.text.trim()}");}),
-                BottomButton('TO TICKET', kBorange, (){Navigator.pushNamed(context, TicketScreen.id, arguments: {
+                BottomButton('TO TICKET', kBorange, (){
+                  addFlight(newCompanyName, newFromWhere, newToWhere, newFlightNum, newNewDate, newDepTime, newSeats);
+                  Navigator.pushNamed(context, TicketScreen.id, arguments: {
                       'companyName': newCompanyName,
                       'fromWhere':newFromWhere,
                       'toWhere':newToWhere,
@@ -132,5 +135,19 @@ class _MpesaNumberScreenState extends State<MpesaNumberScreen> {
         ),
         ),
     );
+  }
+
+  //Function to Add users trips to Firestore
+  Future addFlight(String companyName, String fromWhere, String toWhere, String flightNum, String date, String time, String seats) async {
+        final _firestore = await FirebaseFirestore.instance.collection('TripUsers').doc(FirebaseAuth.instance.currentUser!.uid).collection('trips').add({
+        'company' : companyName,
+        'flight_no' : flightNum,
+        'from' : fromWhere,
+        'to' : toWhere,
+        'time' : time,
+        'date' : date,
+        'seats' : seats,
+      });
+        Fluttertoast.showToast(msg: 'The trip has successifully been added.', gravity: ToastGravity.TOP);
   }
 }
