@@ -467,9 +467,11 @@ class LastTripWithData extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  Text(fromWhere),
-                  Icon(Icons.flight_land_rounded),
-                  Text(toWhere),
+                  Text(fromWhere, style: kBodyTextStyle.copyWith(color: Colors.white),),
+                  SizedBox(width: 10,),
+                  Icon(Icons.flight_land_rounded, color: Colors.white,),
+                  SizedBox(width: 10,),
+                  Text(toWhere, style: kBodyTextStyle.copyWith(color: Colors.white),),
                 ],
               ),
               SizedBox(height: 5,),
@@ -480,7 +482,7 @@ class LastTripWithData extends StatelessWidget {
                             height: 50,
                             width: 50,
                             decoration: BoxDecoration(
-                              color: kPorange.withAlpha(200),
+                              color: Colors.white,
                               borderRadius: BorderRadius.circular(10),
                             ),
                             child: Image.asset('images/$company.png'),
@@ -488,7 +490,7 @@ class LastTripWithData extends StatelessWidget {
                           Column(
                             children: [
                               Text('DATE & TIME'),
-                              Text(date + time),
+                              Text(date +' - ' +time),
                             ],
                           ),
                 ],
