@@ -7,12 +7,13 @@ import'../screens/select_seat.dart';
 //Design of Each Seats
 class SeatContainer extends StatefulWidget {
 
-  SeatContainer(this.seatID, this.isEmpty, this.isSelected, this.isBooked,this.bookNow);
+  SeatContainer(this.seatID, this.isEmpty, this.isSelected, this.isBooked,this.bookNow, this.unBook );
   String seatID;
   bool isEmpty;
   bool isSelected;
   bool isBooked;
   void Function () bookNow;
+  void Function () unBook;
 
 
 
@@ -50,10 +51,12 @@ class _SeatContainerState extends State<SeatContainer> {
                   child: GestureDetector(
                     onDoubleTap: () async{
                       selectedSeatsTimes = 0;
-                      chosenSeatsNumber.removeLast();
+
                       setState(() {
                         widget.isSelected =false;
                       });
+                      widget.unBook();
+
                     print(chosenSeatsNumber);
                     Fluttertoast.showToast(msg: "Seat is unselected");
                     },
