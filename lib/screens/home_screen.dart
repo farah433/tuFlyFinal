@@ -11,7 +11,7 @@ import '../details/county.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-bool hasTrip = false;
+bool hasTrip = true;
 
 class HomeScreen extends StatefulWidget {
   static String id = 'home_screen';
@@ -288,9 +288,7 @@ class _LastTripFlightStreamState extends State<LastTripFlightStream> {
         if(!snapshot.hasData){
           return Center(child: CircularProgressIndicator(),);
         }
-        setState(() {
-          hasTrip = true;
-        });
+
         final trips = snapshot.data.docs;
         List <LastTripWithData> todaysFlightsContainers = [];
         for(var trip in trips){
